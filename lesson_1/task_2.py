@@ -1,14 +1,11 @@
 import asyncio
 from asyncio.subprocess import PIPE
-import locale
 import platform
 from ipaddress import ip_address, IPv4Address
-from pprint import pprint
-
-ENCODING = locale.getpreferredencoding()
+from task_1 import ENCODING
 
 
-async def ping_ip(ip_addr: IPv4Address) -> tuple[str, IPv4Address]:
+async def ping_ip(ip_addr: IPv4Address) -> tuple[bool, IPv4Address]:
     param = '-n' if platform.system().lower() == 'windows' else '-c'
     cmd = f'ping {param} 5 {ip_addr}'
     proc = await asyncio.create_subprocess_shell(cmd=cmd, stdout=PIPE, stderr=PIPE)
@@ -16,8 +13,8 @@ async def ping_ip(ip_addr: IPv4Address) -> tuple[str, IPv4Address]:
     stdout, stderr = await proc.communicate()
     ip = ip_address(stdout.split()[2][1:-2].decode(ENCODING))
     if proc.returncode == 0:
-        return "Узел доступен", ip
-    return "Узел недоступен", ip
+        return True, ip
+    return False, ip
 
 
 async def host_range_ping(ip_addr: str, count: int):
