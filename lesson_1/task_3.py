@@ -29,6 +29,3 @@ async def host_ping_range(ip_addr: str, count: int) -> str:
         return tabulate(results, headers=('Доступность', 'IP-адрес'), tablefmt="grid", stralign="center")
 
     return 'Значение count не более 256'
-
-
-print(asyncio.run(host_ping_range('yandex.ru', 256)))
