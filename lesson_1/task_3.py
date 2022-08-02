@@ -22,8 +22,13 @@ async def host_ping_range(ip_addr: str, count: int) -> str:
                 availability = '-'
             else:
                 availability = '+'
-            result = availability, str(ip_address(stdout.decode(ENCODING).split()[2][1:-3] + '0') + i)
+            raw_ip_string = stdout.decode(ENCODING).split()[2]
+            dot = raw_ip_string.rfind('.') + 1  # find dot index
+            result = availability, str(ip_address(raw_ip_string[1:dot] + '0') + i)
             results.append(result)
         return tabulate(results, headers=('Доступность', 'IP-адрес'), tablefmt="grid", stralign="center")
 
     return 'Значение count не более 256'
+
+
+print(asyncio.run(host_ping_range('yandex.ru', 256)))
